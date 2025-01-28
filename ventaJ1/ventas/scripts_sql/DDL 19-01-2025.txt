@@ -1,0 +1,198 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jan 19, 2025 at 06:27 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `db_ventas`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cliente`
+--
+
+CREATE TABLE `cliente` (
+  `idCliente` int(11) NOT NULL,
+  `Dni` varchar(8) DEFAULT NULL,
+  `Nombres` varchar(255) DEFAULT NULL,
+  `Direccion` varchar(255) DEFAULT NULL,
+  `Estado` varchar(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detalle_ventas`
+--
+
+CREATE TABLE `detalle_ventas` (
+  `idDetalleVentas` int(11) NOT NULL,
+  `idVentas` int(11) NOT NULL,
+  `idProducto` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `PrecioVenta` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `empleado`
+--
+
+CREATE TABLE `empleado` (
+  `idEmpleado` int(11) NOT NULL,
+  `Dni` varchar(8) DEFAULT NULL,
+  `Nombres` varchar(255) DEFAULT NULL,
+  `Telefono` varchar(255) DEFAULT NULL,
+  `Estado` varchar(1) DEFAULT NULL,
+  `Username` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `empleado`
+--
+
+INSERT INTO `empleado` (`idEmpleado`, `Dni`, `Nombres`, `Telefono`, `Estado`, `Username`) VALUES
+(1010, '123', 'Oscar Alejandro Gonzalez', '3135746229', '8', 'oscaralejo4'),
+(1011, '123', '12321324', '3135746229', '1', 'juanp');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `producto`
+--
+
+CREATE TABLE `producto` (
+  `idProducto` int(11) NOT NULL,
+  `Nombres` varchar(244) DEFAULT NULL,
+  `Precio` decimal(10,2) NOT NULL,
+  `Stock` int(11) NOT NULL,
+  `Estado` varchar(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ventas`
+--
+
+CREATE TABLE `ventas` (
+  `idVentas` int(11) NOT NULL,
+  `idCliente` int(11) NOT NULL,
+  `idEmpleado` int(11) NOT NULL,
+  `NumeroSerie` varchar(244) DEFAULT NULL,
+  `FechaVentas` date DEFAULT NULL,
+  `Monto` decimal(10,2) NOT NULL,
+  `Estado` varchar(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`idCliente`);
+
+--
+-- Indexes for table `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  ADD PRIMARY KEY (`idDetalleVentas`),
+  ADD KEY `idVentas` (`idVentas`),
+  ADD KEY `idProducto` (`idProducto`);
+
+--
+-- Indexes for table `empleado`
+--
+ALTER TABLE `empleado`
+  ADD PRIMARY KEY (`idEmpleado`);
+
+--
+-- Indexes for table `producto`
+--
+ALTER TABLE `producto`
+  ADD PRIMARY KEY (`idProducto`);
+
+--
+-- Indexes for table `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`idVentas`),
+  ADD KEY `idCliente` (`idCliente`),
+  ADD KEY `idEmpleado` (`idEmpleado`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `idCliente` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  MODIFY `idDetalleVentas` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `empleado`
+--
+ALTER TABLE `empleado`
+  MODIFY `idEmpleado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1013;
+
+--
+-- AUTO_INCREMENT for table `producto`
+--
+ALTER TABLE `producto`
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ventas`
+--
+ALTER TABLE `ventas`
+  MODIFY `idVentas` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  ADD CONSTRAINT `detalle_ventas_ibfk_1` FOREIGN KEY (`idVentas`) REFERENCES `ventas` (`idVentas`),
+  ADD CONSTRAINT `detalle_ventas_ibfk_2` FOREIGN KEY (`idProducto`) REFERENCES `producto` (`idProducto`);
+
+--
+-- Constraints for table `ventas`
+--
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`idCliente`) REFERENCES `cliente` (`idCliente`),
+  ADD CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`idEmpleado`) REFERENCES `empleado` (`idEmpleado`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
